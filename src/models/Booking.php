@@ -46,3 +46,19 @@ final class Booking
         return $stmt->rowCount() > 0;
     }
 }
+
+public static function hasOverlap(int $roomId, string $checkIn, string $checkOut): bool
+{
+    // Ищем пересечение: новая бронь пересекается, если
+    // (новый заезд < существующего выезда) И (новый выезд > существующего заезда)
+    $sql = "SELECT COUNT(*) FROM bookings 
+            WHERE room_id = ? 
+              AND status = 'approved'
+              AND check_in < ? 
+              AND check_out > ?";
+    
+    $stmt = db()->prepare($sql);
+    $stmt->execute([$roomId, $checkOut, $checkIn]);
+    
+    return (int)$stmt->fetchColumn() > 0;
+}
