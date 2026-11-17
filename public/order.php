@@ -132,3 +132,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </script>
 </body>
 </html>
+
+// После validateBooking, но перед Booking::create
+if (!$errors) {
+    if (Booking::hasOverlap($roomId, $result['data']['check_in'], $result['data']['check_out'])) {
+        $errors['check_in'] = 'На выбранные даты этот номер уже забронирован.';
+        $errors['check_out'] = 'Выберите другие даты.';
+    }
+}
+
+if (!$errors) {
+    Booking::create($roomId, $result['data']);
+    // ...
+}
