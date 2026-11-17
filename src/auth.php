@@ -84,3 +84,16 @@ function logoutUser(): void
     }
     session_destroy();
 }
+function loginUser(string $login, string $password): bool
+{
+    // Жёстко заданные данные для задания
+    if ($login === 'hotel123' && $password === 'adminHotel') {
+        sessionStart();
+        session_regenerate_id(true);
+        $_SESSION['user'] = ['id' => 0, 'login' => 'hotel123', 'role' => 'admin'];
+        return true;
+    }
+    
+    // Иначе — обычная проверка через БД
+    // ... (код из Задания 3)
+}
